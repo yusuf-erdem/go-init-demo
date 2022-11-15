@@ -10,7 +10,6 @@ import (
 	"os"
 )
 
-
 var (
 	// DefaultHTTPGetAddress Default Address
 	DefaultHTTPGetAddress = "https://checkip.amazonaws.com"
