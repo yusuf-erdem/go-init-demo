@@ -31,4 +31,5 @@ jobs:
         go-version: 1.18
     - name: Test Go
       run: |
+          go mod init
           go test -v -json ./hello-world
