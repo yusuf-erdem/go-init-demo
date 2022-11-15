@@ -31,5 +31,12 @@ jobs:
         go-version: 1.18
     - name: Test Go
       run: |
-          go mod init go-mode-init-module
-          go test -v -json ./hello-world
+        go test -v -json ./... > ./test-report.json
+    - name: Foresight Action
+      if: always()
+      uses: runforesight/foresight-test-kit-action@v1
+      with:
+        api_key: ${{ secrets.F_LAB_API_KEY }}
+        test_framework: golang
+        test_format: json
+        test_path: ./test-report.json
