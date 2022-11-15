@@ -1,28 +1,34 @@
-# This workflow will build a golang project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
-
 name: Go
-
 on:
+  issue_comment:
+    types:
+      - created
   push:
-    branches: [ "default" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "default" ]
-
+  workflow_dispatch:
+env:
+  FORESIGHT_UPLOADER_SIGNER_URL: https://upload.service.runforesight.me
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+  PR_NUMBER: ${{ github.event.number }}
+  WORKFLOW_TELEMETRY_BASE_URL: https://api.service.runforesight.me
+  
 jobs:
-
   build:
     runs-on: ubuntu-latest
     steps:
+    - name: Collect Workflow Telemetry
+      if: always()
+      uses: runforesight/foresight-workflow-kit-action@v1
+      with:
+        api_key: ${{ secrets.F_LAB_API_KEY }}
     - uses: actions/checkout@v3
+
 
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
         go-version: 1.18
-
-    - name: Build
-      run: go build -v ./...
-
-    - name: Test
-      run: go test -v ./...
+    - name: Test Go
+      run: |
+          go test -v -json ./... 
